@@ -19,14 +19,21 @@ public class ReadFromSocket {
 			// server IP address/name: "localhost"
 			// port number 7777
 			Socket clientSocket = new Socket("localhost", 3186);
+			//need clientSocket.close();
 			
 			//System.out.println( "Connected to " +   clientSocket.getInetAddress().getHostName());
 
 			// step 2: create output stream and input stream to the socket.
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
-					true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+			//need out.println(userInput);  
+			//need out.flush();
+			//need out.close();
+			
+			//PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			//need in.close();
+			
 			//System.out.println( "I/O streams connected to the socket" );
 
 			// step 3: communicate with the server (write to and read from the streams) 
@@ -36,8 +43,6 @@ public class ReadFromSocket {
 	        Scanner keyboard = new Scanner( System.in );
 	        
 			System.out.println("echo from the server: " + in.readLine());
-			//System.out.print("Command >>");
-			
 			System.out.print("Command >>");
 			for(;;){
 				userInput = keyboard.nextLine();

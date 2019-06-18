@@ -6,7 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class EchoServer {
-
+	// step 1: Open a socket to accept the connection.
+	// step 2: create output stream and input stream to the socket.
+	// step 3: read from the streams and return result or echo the error message
+	// step 4: Close the socket and waiting for another connection.
+	
 	public static void main(String[] args) {
 		Date dNow = new Date();
 		SimpleDateFormat ft = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -17,24 +21,43 @@ class EchoServer {
 
 		try {
 			// step 1: Open a socket to accept the connection.
+			ServerSocket s = new ServerSocket(3186);//need s.close();
+			Socket clientSocket = s.accept();//need clientSocket.close();
 
-			ServerSocket s = new ServerSocket(3186);
-			Socket clientSocket = s.accept();
 
-			// System.out.println("Connected to: " + clientSocket.getInetAddress()
-			// + " at port: " + clientSocket.getLocalPort());
+			 System.out.println("Connected to: " + clientSocket.getInetAddress()
+			 + " at port: " + clientSocket.getLocalPort());
 
 			// step 2: create output stream and input stream to the socket.
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+			
+			// InputStream - InputStreamReader - BufferedReader
+			InputStream is = clientSocket.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader in = new BufferedReader(isr);
+			//need in.readLine()
+			//BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			
+			//OutputStream - OutputStr eamWriter - PrintWriter
+			OutputStream ops = clientSocket.getOutputStream();
+			OutputStreamWriter opsw = new OutputStreamWriter(ops);
+			PrintWriter out = new PrintWriter(opsw);
+			//need out.println(userInput);  
+			//need out.flush();
+			//need out.close();
+			
+			
+			//or you can use :
+			//PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+			//PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
 			// step 3: read from the streams and return result or echo the error message
-
-			out.println(dt);
+			// print + flush
+			out.println(dt);//here the data out put to the client
 			out.flush();
 
-			for (;;) {
-				String str = in.readLine();
+			//for (;;) {
+			while(true) {
+			String str = in.readLine();
 
 				if (str == null) {
 					break;
@@ -127,6 +150,8 @@ class EchoServer {
 
 			// step 4: Close the socket and waiting for another connection.
 			clientSocket.close();
+			in.close();
+			out.close();
 			s.close();
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
